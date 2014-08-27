@@ -1,0 +1,9 @@
+[package]
+
+name = "g"
+version = "0.0.1"
+authors = ["Areg Harutyunyan <aharutyunyan@rmn.com>"]
+
+[dependencies.ncurses]
+
+git = "https://github.com/jeaye/ncurses-rs.git"
