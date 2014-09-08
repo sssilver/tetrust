@@ -1,5 +1,5 @@
 use ncurses::*;
-use std::char;
+use renderer::*;
 
 
 pub struct Board {
@@ -12,13 +12,21 @@ impl Board {
         Board {field: [[0, ..22], ..10]}
     }
 
+    /*
     pub fn render(&self, pos: (i32, i32)) {
         bkgd(' ' as u32 | COLOR_PAIR(1i16) as u32);
+    }
+    */
+}
 
-        for i in range(0i32, 22) {
-            for j in range(0i32, 10) {
-                move(pos.val0() + i, pos.val1() + j);
-                printw("x");
+
+impl Renderable for Board {
+    fn render(&self, pos: Coord, renderer: &Renderer) {
+        for y in range(0u8 + pos.x() as u8, 22) {
+            move (y as i32, 0);
+            printw("-");
+            for x in range(0u8 + pos.y() as u8, 10) {
+                renderer.point(Coord::new(x as int, y as int));
             }
         }
     }

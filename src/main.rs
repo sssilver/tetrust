@@ -2,6 +2,7 @@
 
 extern crate ncurses;
 
+mod renderer;
 mod game;
 
 

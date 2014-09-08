@@ -1,4 +1,7 @@
 /target
 .cargo
+.DS_Store
 /Makefile
 *.swp
+*.*~
+*\**
