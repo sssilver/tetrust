@@ -54,6 +54,11 @@ impl Renderer {
         move((pos.y) as i32, (pos.x * 2) as i32);
 
         printw("#.");
-        
+    }
+
+    pub fn text(&self, text: String, pos: Coord) {
+        move((pos.y) as i32, (pos.x * 2) as i32);
+
+        printw(text.as_slice());
     }
 }

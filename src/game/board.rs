@@ -1,4 +1,3 @@
-use ncurses::*;
 use renderer::*;
 
 
@@ -22,11 +21,14 @@ impl Board {
 
 impl Renderable for Board {
     fn render(&self, pos: Coord, renderer: &Renderer) {
-        for y in range(0u8 + pos.x() as u8, 22) {
-            move (y as i32, 0);
-            printw("-");
-            for x in range(0u8 + pos.y() as u8, 10) {
-                renderer.point(Coord::new(x as int, y as int));
+        for y in range(0u8, 22) {
+            for x in range(0u8, 10) {
+                renderer.point(
+                    Coord::new(
+                        (x + pos.x() as u8) as int,
+                        (y + pos.y() as u8) as int
+                    )
+                );
             }
         }
     }

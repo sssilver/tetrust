@@ -9,7 +9,7 @@ mod board;
 pub struct Game {
     is_running: bool,
     board: board::Board,
-    renderer: Renderer
+    renderer: Renderer,
 }
 
 
@@ -18,7 +18,7 @@ impl Game {
         Game {
             is_running: true,
             board: board::Board::new(),
-            renderer: Renderer::new()
+            renderer: Renderer::new(),
         }
     }
 
@@ -33,6 +33,7 @@ impl Game {
         self.process_keyboard();
 
         // Update the screen
+        clear();
         refresh();
     }
 
