@@ -21,13 +21,21 @@ impl Board {
 
 impl Renderable for Board {
     fn render(&self, pos: Coord, renderer: &Renderer) {
-        for y in range(0u8, 22) {
-            for x in range(0u8, 10) {
-                renderer.point(
+        let mut color = 0;
+
+        for y in range(0u8, 21) {
+            for x in range(0u8, 12) {
+                if y == 20 || x == 0 || x == 11 {  // Edge
+                    color = 2;
+                } else {
+                    color = 1;
+                }
+
+                renderer.block(
                     Coord::new(
-                        (x + pos.x() as u8) as int,
+                        (x * 2 + pos.x() as u8) as int,
                         (y + pos.y() as u8) as int
-                    )
+                    ), color
                 );
             }
         }
