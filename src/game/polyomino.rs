@@ -25,10 +25,10 @@ impl Polyomino {
         let mut potential: HashSet<Cell> = HashSet::new();
 
         for cell in self.cells.iter() {
-            potential.insert(((*cell).val0() - 1, (*cell).val1()));
-            potential.insert(((*cell).val0() + 1, (*cell).val1()));
-            potential.insert(((*cell).val0(), (*cell).val1() - 1));
-            potential.insert(((*cell).val0(), (*cell).val1() + 1));
+            potential.insert((cell.val0() - 1, cell.val1()));
+            potential.insert((cell.val0() + 1, cell.val1()));
+            potential.insert((cell.val0(), cell.val1() - 1));
+            potential.insert((cell.val0(), cell.val1() + 1));
         }
 
         potential.difference(&self.cells).map(|x| x.clone()).collect()
