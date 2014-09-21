@@ -1,4 +1,5 @@
-use renderer::*;
+use renderer::Renderable;
+use renderer::Renderer;
 
 
 type Point = (int, int);
