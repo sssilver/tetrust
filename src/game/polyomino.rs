@@ -73,8 +73,8 @@ impl Renderable for Polyomino {
         for cell in self.cells.iter() {
             renderer.block(
                 (
-                    cell.val0() as int + pos.val0(),
-                    cell.val1() as int + pos.val1(),
+                    ((cell.val0() as int) + pos.val0()) * 2,
+                    (cell.val1() as int) + pos.val1()
                 ),
                 2  // Color
             );

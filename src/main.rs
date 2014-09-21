@@ -8,11 +8,11 @@ mod game;
 
 fn main()
 {
-
-    let mut game = game::Game::new();
+	let tetris = 4u8;  // Regular Tetris
+    let mut game = game::Game::new(tetris);
 
     game.initialize();
-    
+
     while game.is_running() {
         game.run();
     }

@@ -46,7 +46,7 @@ impl Renderer {
         // Draw half a block in pos
         attron(COLOR_PAIR(color as i16));  // Set the color
 
-        move(pos.val0() as i32, pos.val1() as i32);  // Move in position
+        move(pos.val1() as i32, pos.val0() as i32);  // Move in position
         printw("#");  // Render
     }
 
