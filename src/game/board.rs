@@ -1,6 +1,9 @@
 use renderer::*;
 
 
+type Point = (int, int);
+
+
 pub struct Board {
     field: [[u8, ..22], ..10]
 }
@@ -20,7 +23,7 @@ impl Board {
 
 
 impl Renderable for Board {
-    fn render(&self, pos: Coord, renderer: &Renderer) {
+    fn render(&self, pos: Point, renderer: &Renderer) {
         let mut color = 0;
 
         for y in range(0u8, 21) {
@@ -32,9 +35,9 @@ impl Renderable for Board {
                 }
 
                 renderer.block(
-                    Coord::new(
-                        (x * 2 + pos.x() as u8) as int,
-                        (y + pos.y() as u8) as int
+                    (
+                        (x * 2 + pos.val0() as u8) as int,
+                        (y + pos.val1() as u8) as int
                     ), color
                 );
             }

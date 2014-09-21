@@ -1,33 +1,15 @@
 use ncurses::*;
 
 
-pub struct Coord {
-    x: int,
-    y: int
-}
+type Point = (int, int);
 
 
 pub trait Renderable {
-    fn render(&self, pos: Coord, renderer: &Renderer);
+    fn render(&self, pos: Point, renderer: &Renderer);
 }
 
 
 pub struct Renderer;
-
-
-impl Coord {
-    pub fn new(x: int, y: int) -> Coord {
-        Coord {x: x, y: y}
-    }
-
-    pub fn x(&self) -> int {
-        self.x
-    }
-
-    pub fn y(&self) -> int {
-        self.y
-    }
-}
 
 
 impl Renderer {
@@ -54,22 +36,22 @@ impl Renderer {
         init_pair(2i16, 2i16, 2i16);
     }
 
-    pub fn block(&self, pos: Coord, color: int) {
+    pub fn block(&self, pos: Point, color: int) {
         // Draw a full block in pos
-        self.pixel(Coord::new(pos.x, pos.y), color);
-        self.pixel(Coord::new(pos.x + 1, pos.y), color);
+        self.pixel(pos, color);
+        self.pixel((pos.val0() + 1, pos.val1()), color);
     }
 
-    pub fn pixel(&self, pos: Coord, color: int) {
+    pub fn pixel(&self, pos: Point, color: int) {
         // Draw half a block in pos
         attron(COLOR_PAIR(color as i16));  // Set the color
 
-        move(pos.y as i32, pos.x as i32);  // Move in position
+        move(pos.val0() as i32, pos.val1() as i32);  // Move in position
         printw("#");  // Render
     }
 
-    pub fn text(&self, text: String, pos: Coord) {
-        move((pos.y) as i32, (pos.x * 2) as i32);
+    pub fn text(&self, text: String, pos: Point) {
+        move((pos.val0()) as i32, (pos.val1() * 2) as i32);
 
         printw(text.as_slice());
     }

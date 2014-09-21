@@ -2,9 +2,12 @@ use ncurses::*;
 
 use renderer::Renderer;
 use renderer::Renderable;
-use renderer::Coord;
-mod board;
 
+mod board;
+mod polyomino;
+
+
+type Point = (int, int);
 
 pub struct Game {
     is_running: bool,
@@ -28,7 +31,7 @@ impl Game {
     }
     
     pub fn run(&mut self) {
-        self.board.render(Coord::new(5, 7), &self.renderer);
+        self.board.render((5, 7), &self.renderer);
 
         self.process_keyboard();
 
