@@ -14,31 +14,49 @@ pub struct Polyomino {
 
 impl Polyomino {
     pub fn new(cells: HashSet<Cell>) -> Polyomino {
+        // Translate the cells to origin
+        let translated_cells = Polyomino::translate(cells);
+
+        Polyomino {
+            cells: translated_cells
+        }
+    }
+
+    pub fn rotate(&mut self, clockwise: bool) {
+        // Rotate each cell
+        let mut rotated_cells = HashSet::new();
+
+        for cell in self.cells.iter() {
+            rotated_cells.insert((
+                (-1 + clockwise as uint) * cell.val1(),
+                (-1 + !clockwise as uint) * cell.val0()
+            ));
+        }
+
+        self.cells = rotated_cells;
+    }
+
+    fn translate(cells: HashSet<Cell>) -> HashSet<Cell> {
         // Find the smallest x and y for each cell
         let num_cells = cells.len();
+
+        // Can't be bigger than num_cells
         let mut min_x = num_cells;
         let mut min_y = num_cells;
 
-        // Translate the cells to origin
-        if cells.len() > 0 {
-            // Can't be bigger than num_cells
+        for cell in cells.iter() {
+            if cell.val0() < min_x {
+                min_x = cell.val0();
+            }
 
-            for cell in cells.iter() {
-                if cell.val0() < min_x {
-                    min_x = cell.val0();
-                }
-
-                if cell.val1() < min_y {
-                    min_y = cell.val1();
-                }
+            if cell.val1() < min_y {
+                min_y = cell.val1();
             }
         }
 
-        Polyomino {
-            cells: cells.iter().map(
-                |&cell| (cell.val0() - min_x, cell.val1() - min_y)
-            ).collect()
-        }
+        return cells.iter().map(
+            |&cell| (cell.val0() - min_x, cell.val1() - min_y)
+        ).collect();
     }
 
     pub fn add_cell(&self, cell: Cell) -> Polyomino {
