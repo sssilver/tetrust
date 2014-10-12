@@ -46,12 +46,12 @@ impl Renderer {
         // Draw half a block in pos
         attron(COLOR_PAIR(color as i16));  // Set the color
 
-        move(pos.val1() as i32, pos.val0() as i32);  // Move in position
+        mv(pos.val1() as i32, pos.val0() as i32);  // Move in position
         printw("#");  // Render
     }
 
     pub fn text(&self, text: String, pos: Point) {
-        move((pos.val0()) as i32, (pos.val1() * 2) as i32);
+        mv((pos.val0()) as i32, (pos.val1() * 2) as i32);
 
         printw(text.as_slice());
     }

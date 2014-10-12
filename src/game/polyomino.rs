@@ -2,9 +2,11 @@ use std::collections::HashSet;
 use std::vec::Vec;
 use renderer::Renderable;
 use renderer::Renderer;
+use std::cmp::min;
+use std::fmt;
 
 
-type Cell = (uint, uint);
+type Cell = (int, int);
 type Coord = (int, int);
 
 
@@ -27,13 +29,16 @@ impl Polyomino {
         let mut rotated_cells = HashSet::new();
 
         for cell in self.cells.iter() {
-            rotated_cells.insert((
-                (-1 + clockwise as uint) * cell.val1(),
-                (-1 + !clockwise as uint) * cell.val0()
-            ));
+            let rotated_cell = (
+                (-1 + 2 * (clockwise as int)) * cell.val1(),
+                (-1 + 2 * (!clockwise as int)) * cell.val0()
+            );
+
+            rotated_cells.insert(rotated_cell);
         }
 
-        self.cells = rotated_cells;
+
+        self.cells = Polyomino::translate(rotated_cells);
     }
 
     fn translate(cells: HashSet<Cell>) -> HashSet<Cell> {
@@ -41,18 +46,19 @@ impl Polyomino {
         let num_cells = cells.len();
 
         // Can't be bigger than num_cells
-        let mut min_x = num_cells;
-        let mut min_y = num_cells;
+        let mut min_x = num_cells as int;
+        let mut min_y = num_cells as int;
 
         for cell in cells.iter() {
             if cell.val0() < min_x {
-                min_x = cell.val0();
+                min_x = min(cell.val0(), min_x);
             }
 
             if cell.val1() < min_y {
-                min_y = cell.val1();
+                min_y = min(cell.val1(), min_y);
             }
         }
+
 
         return cells.iter().map(
             |&cell| (cell.val0() - min_x, cell.val1() - min_y)
@@ -63,7 +69,7 @@ impl Polyomino {
         let mut cells = self.cells.clone();
         cells.insert(cell);
 
-        Polyomino { cells: cells }
+        Polyomino::new(cells)
     }
 
     pub fn potential_cells(&self) -> HashSet<Cell> {
@@ -97,6 +103,12 @@ impl Renderable for Polyomino {
                 2  // Color
             );
         }
+    }
+}
+
+impl fmt::Show for Polyomino {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{}", self.cells)
     }
 }
 

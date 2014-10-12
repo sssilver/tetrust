@@ -32,23 +32,31 @@ impl Game {
     }
 
     pub fn initialize(&self) {
-        self.renderer.initialize();
+        //self.renderer.initialize();
+        println!("{}", self.pieces[0]);
     }
 
     pub fn run(&mut self) {
-        self.board.render((2, 2), &self.renderer);
+        //self.board.render((2, 2), &self.renderer);
 
         let mut x = 1u8;
 
+        //println!("{}", self.pieces[0]);
+
+        /*
         match self.pieces.iter().next() {
             Some(piece) => piece.render((0, 0), &self.renderer),
             None => ()
         }
+        */
+        //self.pieces[0].render((0, 0), &self.renderer);
 
-        self.process_keyboard();
+        //self.process_keyboard();
+
+        //clear();
 
         // Update the screen
-        refresh();
+        //refresh();
     }
 
     pub fn is_running(&self) -> bool {
@@ -67,6 +75,10 @@ impl Game {
 
         if key == 27 {  // ESC pressed: quit the game
             self.quit();
+        }
+
+        if key == 32 {
+            self.pieces.get_mut(0).rotate(true);
         }
     }
 }
