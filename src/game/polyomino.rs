@@ -25,20 +25,21 @@ impl Polyomino {
     }
 
     pub fn rotate(&mut self, clockwise: bool) {
+        self.cells = self.get_rotated(clockwise);
+    }
+
+    pub fn get_rotated(&self, clockwise: bool) -> HashSet<Cell> {
         // Rotate each cell
         let mut rotated_cells = HashSet::new();
 
         for cell in self.cells.iter() {
-            let rotated_cell = (
-                (-1 + 2 * (clockwise as int)) * cell.val1(),
-                (-1 + 2 * (!clockwise as int)) * cell.val0()
-            );
-
-            rotated_cells.insert(rotated_cell);
+            rotated_cells.insert((
+                (-1 + 2 * (!clockwise as int)) * cell.val1(),
+                (-1 + 2 * (clockwise as int)) * cell.val0()
+            ));
         }
 
-
-        self.cells = Polyomino::translate(rotated_cells);
+        Polyomino::translate(rotated_cells)
     }
 
     fn translate(cells: HashSet<Cell>) -> HashSet<Cell> {
@@ -58,7 +59,6 @@ impl Polyomino {
                 min_y = min(cell.val1(), min_y);
             }
         }
-
 
         return cells.iter().map(
             |&cell| (cell.val0() - min_x, cell.val1() - min_y)
@@ -88,7 +88,16 @@ impl Polyomino {
 
 impl PartialEq for Polyomino {
     fn eq(&self, other: &Polyomino) -> bool {
-        return self.cells == other.cells;
+        // Make sure none of the rotations match
+        for i in range(0u8, 4) {
+            let rotated_cells = other.get_rotated(true);  // Rotate clockwise
+
+            if self.cells == rotated_cells {
+                return true;
+            }
+        }
+
+        false
     }
 }
 

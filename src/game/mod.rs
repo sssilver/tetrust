@@ -32,16 +32,11 @@ impl Game {
     }
 
     pub fn initialize(&self) {
-        //self.renderer.initialize();
-        println!("{}", self.pieces[0]);
+        self.renderer.initialize();
     }
 
     pub fn run(&mut self) {
-        //self.board.render((2, 2), &self.renderer);
-
-        let mut x = 1u8;
-
-        //println!("{}", self.pieces[0]);
+        self.board.render((0, 0), &self.renderer);
 
         /*
         match self.pieces.iter().next() {
@@ -49,9 +44,9 @@ impl Game {
             None => ()
         }
         */
-        //self.pieces[0].render((0, 0), &self.renderer);
+        self.pieces[0].render((0, 0), &self.renderer);
 
-        //self.process_keyboard();
+        self.process_keyboard();
 
         //clear();
 
