@@ -6,3 +6,15 @@ authors = ["sssilver <sssilver@gmail.com>"]
 
 [dependencies.ncurses]
 git = "https://github.com/jeaye/ncurses-rs.git"
+
+[dependencies.graphics]
+git = "https://github.com/pistondevelopers/rust-graphics"
+
+[dependencies.piston]
+git = "https://github.com/pistondevelopers/piston/"
+
+[dependencies.opengl_graphics]
+git = "https://github.com/pistondevelopers/opengl_graphics"
+
+[dependencies.sdl2_game_window]
+git = "https://github.com/pistondevelopers/sdl2_game_window"
