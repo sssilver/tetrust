@@ -2,11 +2,11 @@ use renderer::Renderable;
 use renderer::Renderer;
 
 
-type Point = (int, int);
+type Point = (u8, u8);
 
 
 pub struct Board {
-    field: [[u8, ..22], ..10]
+    field: [[u8; 22]; 10]
 }
 
 

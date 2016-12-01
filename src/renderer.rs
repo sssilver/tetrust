@@ -1,4 +1,4 @@
-use ncurses::*;
+use pancurses::*;
 
 
 type Point = (int, int);

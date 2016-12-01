@@ -1,4 +1,4 @@
-use ncurses::*;
+//use ncurses::*;
 use std::vec::Vec;
 
 use renderer::Renderer;
