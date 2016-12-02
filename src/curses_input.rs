@@ -36,6 +36,7 @@ impl<'a> Subsystem for CursesInput<'a> {
     }
 
     fn stop(&mut self) -> Result<()> {
+        self.window.keypad(false);
         Ok(())
     }
 
