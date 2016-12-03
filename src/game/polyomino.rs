@@ -1,13 +1,12 @@
 use std::collections::HashSet;
 use std::vec::Vec;
-use renderer::Renderable;
-use renderer::Renderer;
+use renderer::{Point, Renderable, Renderer};
 use std::cmp::min;
 use std::fmt;
 
 
-type Cell = (int, int);
-type Coord = (int, int);
+pub type Cell = (i8, i8);
+type Coord = (i8, i8);
 
 
 pub struct Polyomino {
@@ -34,8 +33,8 @@ impl Polyomino {
 
         for cell in self.cells.iter() {
             rotated_cells.insert((
-                (-1 + 2 * (!clockwise as int)) * cell.val1(),
-                (-1 + 2 * (clockwise as int)) * cell.val0()
+                (-1 + 2 * (!clockwise as i8)) * cell.1,
+                (-1 + 2 * (clockwise as i8)) * cell.0
             ));
         }
 
@@ -44,24 +43,24 @@ impl Polyomino {
 
     fn translate(cells: HashSet<Cell>) -> HashSet<Cell> {
         // Find the smallest x and y for each cell
-        let num_cells = cells.len();
+        let num_cells = cells.len() as i8;
 
         // Can't be bigger than num_cells
-        let mut min_x = num_cells as int;
-        let mut min_y = num_cells as int;
+        let mut min_x = num_cells;
+        let mut min_y = num_cells;
 
         for cell in cells.iter() {
-            if cell.val0() < min_x {
-                min_x = min(cell.val0(), min_x);
+            if cell.0 < min_x {
+                min_x = min(cell.0, min_x);
             }
 
-            if cell.val1() < min_y {
-                min_y = min(cell.val1(), min_y);
+            if cell.1 < min_y {
+                min_y = min(cell.1, min_y);
             }
         }
 
         return cells.iter().map(
-            |&cell| (cell.val0() - min_x, cell.val1() - min_y)
+            |&cell| (cell.0 - min_x, cell.1 - min_y)
         ).collect();
     }
 
@@ -76,10 +75,10 @@ impl Polyomino {
         let mut potential: HashSet<Cell> = HashSet::new();
 
         for cell in self.cells.iter() {
-            potential.insert((cell.val0() - 1, cell.val1()));
-            potential.insert((cell.val0() + 1, cell.val1()));
-            potential.insert((cell.val0(), cell.val1() - 1));
-            potential.insert((cell.val0(), cell.val1() + 1));
+            potential.insert((cell.0 - 1, cell.1));
+            potential.insert((cell.0 + 1, cell.1));
+            potential.insert((cell.0, cell.1 - 1));
+            potential.insert((cell.0, cell.1 + 1));
         }
 
         potential.difference(&self.cells).map(|x| x.clone()).collect()
@@ -89,7 +88,7 @@ impl Polyomino {
 impl PartialEq for Polyomino {
     fn eq(&self, other: &Polyomino) -> bool {
         // Make sure none of the rotations match
-        for i in range(0u8, 4) {
+        for i in 0..4 {
             let rotated_cells = other.get_rotated(true);  // Rotate clockwise
 
             if self.cells == rotated_cells {
@@ -102,22 +101,19 @@ impl PartialEq for Polyomino {
 }
 
 impl Renderable for Polyomino {
-    fn render(&self, pos: Coord, renderer: &Renderer) {
+    fn render(&self, pos: Point, renderer: &mut Renderer) {
         for cell in self.cells.iter() {
-            renderer.block(
-                (
-                    ((cell.val0() as int) + pos.val0()) * 2,
-                    (cell.val1() as int) + pos.val1()
-                ),
-                2  // Color
-            );
+            renderer.block((
+                (cell.0 as i32 + pos.0) * 2,
+                cell.1 as i32 + pos.1
+            ));
         }
     }
 }
 
-impl fmt::Show for Polyomino {
+impl fmt::Display for Polyomino {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "{}", self.cells)
+        write!(f, "{:?}", self.cells)
     }
 }
 

@@ -1,18 +1,19 @@
-use renderer::Renderable;
-use renderer::Renderer;
-
-
-type Point = (u8, u8);
+use game::polyomino::Cell;
+use renderer::{Point, Renderable, Renderer};
 
 
 pub struct Board {
-    field: [[u8; 22]; 10]
+    size: (u8, u8),
+    field: Vec<Cell>
 }
 
 
 impl Board {
-    pub fn new() -> Board {
-        Board {field: [[0, ..22], ..10]}
+    pub fn new(size: (u8, u8)) -> Board {
+        Board {
+            size: size,
+            field: Vec::new()
+        }
     }
 
     /*
@@ -24,23 +25,17 @@ impl Board {
 
 
 impl Renderable for Board {
-    fn render(&self, pos: Point, renderer: &Renderer) {
+    fn render(&self, pos: Point, renderer: &mut Renderer) {
         let mut color = 0;
 
-        for y in range(0u8, 21) {
-            for x in range(0u8, 12) {
-                if y == 20 || x == 0 || x == 11 {  // Edge
-                    color = 2;
-                } else {
-                    color = 1;
+        for y in 0..self.size.1 {
+            for x in 0..self.size.0 {
+                if y == self.size.1 - 1 || x == 0 || x == self.size.0 {  // Edge
+                    renderer.block((
+                        x as i32 * 2 + pos.0,
+                        y as i32 + pos.1
+                    ));
                 }
-
-                renderer.block(
-                    (
-                        (x * 2 + pos.val0() as u8) as int,
-                        (y + pos.val1() as u8) as int
-                    ), color
-                );
             }
         }
     }
