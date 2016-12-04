@@ -1,5 +1,5 @@
 use error::Result;
-use input::{Input, Key};
+use input::{Action, Input};
 use pancurses;
 use std::collections::HashSet;
 use subsystem::Subsystem;
@@ -7,7 +7,7 @@ use subsystem::Subsystem;
 
 pub struct CursesInput<'a> {
     window: &'a pancurses::Window,
-    pressed_keys: HashSet<Key>
+    performed_actions: HashSet<Action>
 }
 
 
@@ -15,14 +15,14 @@ impl<'a> CursesInput<'a> {
     pub fn new(window: &'a pancurses::Window) -> CursesInput<'a> {
         CursesInput {
             window: window,
-            pressed_keys: HashSet::new()
+            performed_actions: HashSet::new()
         }
     }
 }
 
 impl<'a> Input for CursesInput<'a> {
-    fn is_pressed(&self, key: Key) -> Result<bool> {
-        Ok(self.pressed_keys.contains(&key))
+    fn actions(&self) -> HashSet<Action> {
+        self.performed_actions.clone()
     }
 }
 
@@ -41,16 +41,18 @@ impl<'a> Subsystem for CursesInput<'a> {
     }
 
     fn execute(&mut self) -> Result<()> {
-        self.pressed_keys.clear();
+        self.performed_actions.clear();
 
         match self.window.getch() {
-            Some(pancurses::Input::KeyLeft) => { self.pressed_keys.insert(Key::Left); },
-            Some(pancurses::Input::KeyRight) => { self.pressed_keys.insert(Key::Right); },
-            Some(pancurses::Input::KeyUp) => { self.pressed_keys.insert(Key::Up); },
-            Some(pancurses::Input::KeyDown) => { self.pressed_keys.insert(Key::Down); },
-            Some(pancurses::Input::Character(' ')) => { self.pressed_keys.insert(Key::Select); },
-            Some(pancurses::Input::Character('$')) => { self.pressed_keys.insert(Key::Pause); },
-            Some(input) => { },
+            Some(pancurses::Input::KeyLeft) => { self.performed_actions.insert(Action::Left); },
+            Some(pancurses::Input::KeyRight) => { self.performed_actions.insert(Action::Right); },
+            Some(pancurses::Input::KeyUp) => { self.performed_actions.insert(Action::Up); },
+            Some(pancurses::Input::KeyDown) => { self.performed_actions.insert(Action::Down); },
+            Some(pancurses::Input::Character(' ')) => { self.performed_actions.insert(Action::Select); },
+            Some(pancurses::Input::Character('$')) => { self.performed_actions.insert(Action::Pause); },
+            Some(pancurses::Input::Character('q')) => { self.performed_actions.insert(Action::Pause); },
+            Some(pancurses::Input::Character('Q')) => { self.performed_actions.insert(Action::Pause); },
+            Some(_) => { },
             None => ()
         }
 

@@ -1,14 +1,14 @@
 use error::Result;
 use pancurses;
 use renderer::{Point, Renderer};
-use std::collections::HashMap;
+use std::collections::BinaryHeap;
 use subsystem::Subsystem;
 
 
 pub struct CursesRenderer<'a> {
     window: &'a pancurses::Window,
 
-    texts: HashMap<Point, String>
+    texts: BinaryHeap<(Point, String)>
 }
 
 
@@ -16,12 +16,12 @@ impl<'a> CursesRenderer<'a> {
     pub fn new(window: &'a pancurses::Window) -> CursesRenderer<'a> {
         CursesRenderer {
             window: window,
-            texts: HashMap::new()
+            texts: BinaryHeap::new()
         }
     }
 
-    fn render_texts(&self) {
-        for (pos, text) in &self.texts {
+    fn render_texts(&mut self) {
+        while let Some((pos, text)) = self.texts.pop() {
             self.window.mvaddstr(pos.1, pos.0, &text);
         }
     }
@@ -34,7 +34,7 @@ impl<'a> Renderer for CursesRenderer<'a> {
     }
 
     fn text(&mut self, text: String, pos: Point) {
-        self.texts.insert(pos, text);
+        self.texts.push((pos, text));
     }
 }
 
@@ -58,12 +58,13 @@ impl<'a> Subsystem for CursesRenderer<'a> {
         pancurses::init_pair(1, pancurses::COLOR_WHITE, pancurses::COLOR_BLUE);
         self.window.bkgd(pancurses::COLOR_PAIR(1));
         self.window.erase();
+        self.window.clear();
 
         // Render the texts last
         self.render_texts();
 
-        self.window.refresh();
 
+        self.window.refresh();  // Update the screen
         Ok(())
     }
 }

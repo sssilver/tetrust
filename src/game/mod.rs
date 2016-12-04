@@ -1,14 +1,13 @@
+use error::Result;
+use input::{Action, Input};
 use pancurses;
+use renderer::{Renderable, Renderer};
 use std::vec::Vec;
 
-use curses_input::CursesInput;
-use curses_renderer::CursesRenderer;
-use input::{Input, Key};
-use renderer::{Renderable, Renderer};
-use subsystem::Subsystem;
 
 mod board;
 mod polyomino;
+mod state;
 
 
 type Point = (u8, u8);
@@ -16,46 +15,43 @@ type Point = (u8, u8);
 pub struct Game<'a> {
     is_running: bool,
     board: board::Board,
+    state: state::State,
     complexity: u8,
 
     pieces: Vec<polyomino::Polyomino>,
 
-    window: pancurses::Window,
-    renderer: CursesRenderer<'a>,
-    input: CursesInput<'a>
+    renderer: &'a mut Renderer,
+    input: &'a mut Input
 }
 
 
 impl<'a> Game<'a> {
-    pub fn new(complexity: u8) -> Game<'a> {
-        let window = pancurses::initscr();
-
+    pub fn new(complexity: u8, renderer: &'a mut Renderer, input: &'a mut Input) -> Game<'a> {
         Game {
             is_running: true,
             board: board::Board::new((10, 23)),
-            window: window,
-            renderer: CursesRenderer::new(&window),
-            input: CursesInput::new(&window),
+            renderer: renderer,
+            state: state::State { left: 0, top: 0 },
+            input: input,
             complexity: complexity,
             pieces: polyomino::generate(complexity)
         }
     }
 
-    pub fn initialize(&self) {
-        self.renderer.start();
-        self.input.start();
+    pub fn initialize(&mut self) -> Result<()> {
+        self.renderer.start()?;
+        self.input.start()?;
+
+        Ok(())
     }
 
     pub fn run(&mut self) {
-        self.board.render((0, 0), &mut self.renderer);
+        //self.board.render((0, 0), self.renderer);
 
         self.input.execute();
+        self.process_input();
 
-        if self.input.is_pressed(Key::Pause).unwrap() {
-            self.quit();
-        }
-
-        self.renderer.text("Rocket in the sky".to_string(), (10, 10));
+        self.renderer.text("Rocket in the sky".to_string(), (self.state.left, self.state.top));
 
         self.renderer.execute();
 
@@ -65,14 +61,20 @@ impl<'a> Game<'a> {
             None => ()
         }
         */
-        self.pieces[0].render((0, 0), &mut self.renderer);
+        //self.pieces[0].render((0, 0), self.renderer);
+    }
 
-        self.input.execute();
-
-        //clear();
-
-        // Update the screen
-        //refresh();
+    fn process_input(&mut self) {
+        for action in self.input.actions() {
+            match action {
+                Action::Up => { self.state.top -= 1; },
+                Action::Right => { self.state.left += 1; },
+                Action::Down => { self.state.top += 1; },
+                Action::Left => { self.state.left -= 1; },
+                Action::Pause => { self.is_running = false; },
+                _ => {}
+            }
+        }
     }
 
     pub fn is_running(&self) -> bool {
@@ -84,10 +86,6 @@ impl<'a> Game<'a> {
 
         self.input.stop();
         self.renderer.stop();
-
-        self.is_running = false;
-
-        pancurses::endwin();  // Restore ncurses
     }
 
     /*

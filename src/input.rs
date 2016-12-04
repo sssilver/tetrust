@@ -1,9 +1,10 @@
 use error::Result;
+use std::collections::HashSet;
 use subsystem::Subsystem;
 
 
-#[derive(Debug, Hash, Eq, PartialEq)]
-pub enum Key {
+#[derive(Clone, Debug, Hash, Eq, PartialEq)]
+pub enum Action {
     Left,
     Right,
     Up,
@@ -14,5 +15,5 @@ pub enum Key {
 
 
 pub trait Input: Subsystem {
-    fn is_pressed(&self, key: Key) -> Result<bool>;
+    fn actions(&self) -> HashSet<Action>;
 }

@@ -8,16 +8,23 @@ mod input;
 mod renderer;
 mod subsystem;
 
+use curses_input::CursesInput;
+use curses_renderer::CursesRenderer;
 use game::Game;
-use input::{Input, Key};
+use input::{Action, Input};
 use renderer::Renderer;
-use subsystem::Subsystem;
 
 
 fn main()
 {
     let complexity = 4u8;  // Regular Tetris
-    let mut game = Game::new(complexity);
+
+    let window = pancurses::initscr();  // Initialize ncurses
+
+    let mut input= CursesInput::new(&window);
+    let mut renderer = CursesRenderer::new(&window);
+
+    let mut game = Game::new(complexity, &mut renderer, &mut input);
 
     game.initialize();
 
@@ -26,4 +33,6 @@ fn main()
     }
 
     game.quit();
+
+    pancurses::endwin();  // Restore ncurses
 }

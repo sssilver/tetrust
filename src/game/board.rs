@@ -26,8 +26,6 @@ impl Board {
 
 impl Renderable for Board {
     fn render(&self, pos: Point, renderer: &mut Renderer) {
-        let mut color = 0;
-
         for y in 0..self.size.1 {
             for x in 0..self.size.0 {
                 if y == self.size.1 - 1 || x == 0 || x == self.size.0 {  // Edge
