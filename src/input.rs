@@ -1,4 +1,3 @@
-use error::Result;
 use std::collections::HashSet;
 use subsystem::Subsystem;
 
@@ -15,5 +14,5 @@ pub enum Action {
 
 
 pub trait Input: Subsystem {
-    fn actions(&self) -> HashSet<Action>;
+    fn actions(&mut self) -> HashSet<Action>;
 }

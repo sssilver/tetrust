@@ -1,4 +1,5 @@
 extern crate pancurses;
+extern crate rand;
 
 mod curses_input;
 mod curses_renderer;
@@ -11,8 +12,6 @@ mod subsystem;
 use curses_input::CursesInput;
 use curses_renderer::CursesRenderer;
 use game::Game;
-use input::{Action, Input};
-use renderer::Renderer;
 
 
 fn main()
@@ -26,13 +25,15 @@ fn main()
 
     let mut game = Game::new(complexity, &mut renderer, &mut input);
 
-    game.initialize();
+    game.initialize()
+        .expect("Failed to initialize the game");
 
     while game.is_running() {
         game.run();
     }
 
-    game.quit();
+    game.quit()
+        .expect("Failed to properly quit the game");
 
     pancurses::endwin();  // Restore ncurses
 }

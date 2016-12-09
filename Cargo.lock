@@ -3,6 +3,7 @@ name = "tetrust"
 version = "0.0.1"
 dependencies = [
  "pancurses 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
 [[package]]
@@ -48,6 +49,14 @@ dependencies = [
  "libc 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)",
 ]
 
+[[package]]
+name = "rand"
+version = "0.3.15"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+dependencies = [
+ "libc 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)",
+]
+
 [metadata]
 "checksum gcc 0.3.38 (registry+https://github.com/rust-lang/crates.io-index)" = "553f11439bdefe755bf366b264820f1da70f3aaf3924e594b886beb9c831bcf5"
 "checksum libc 0.2.17 (registry+https://github.com/rust-lang/crates.io-index)" = "044d1360593a78f5c8e5e710beccdc24ab71d1f01bc19a29bcacdba22e8475d8"
@@ -55,3 +64,4 @@ dependencies = [
 "checksum ncurses 5.84.0 (registry+https://github.com/rust-lang/crates.io-index)" = "30beffce9ed08187ec156a5d78c501b6ae20ee39eba7d1abf9fdfe522c86ae89"
 "checksum pancurses 0.7.0 (registry+https://github.com/rust-lang/crates.io-index)" = "8d50e310b2bd745bbafc0138019729791c6c67bff8094d9136e85fd76e696709"
 "checksum pdcurses-sys 0.3.0 (registry+https://github.com/rust-lang/crates.io-index)" = "27a3bc0e02f0e4b38c3225e5ead84f7d529d44048076bb49980f76edcff7d6f1"
+"checksum rand 0.3.15 (registry+https://github.com/rust-lang/crates.io-index)" = "022e0636ec2519ddae48154b028864bdce4eaf7d35226ab8e65c611be97b189d"

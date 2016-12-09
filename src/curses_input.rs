@@ -21,8 +21,12 @@ impl<'a> CursesInput<'a> {
 }
 
 impl<'a> Input for CursesInput<'a> {
-    fn actions(&self) -> HashSet<Action> {
-        self.performed_actions.clone()
+    fn actions(&mut self) -> HashSet<Action> {
+        let result = self.performed_actions.clone();
+
+        self.performed_actions.clear();
+
+        result
     }
 }
 
@@ -41,17 +45,17 @@ impl<'a> Subsystem for CursesInput<'a> {
     }
 
     fn execute(&mut self) -> Result<()> {
-        self.performed_actions.clear();
-
         match self.window.getch() {
             Some(pancurses::Input::KeyLeft) => { self.performed_actions.insert(Action::Left); },
             Some(pancurses::Input::KeyRight) => { self.performed_actions.insert(Action::Right); },
             Some(pancurses::Input::KeyUp) => { self.performed_actions.insert(Action::Up); },
             Some(pancurses::Input::KeyDown) => { self.performed_actions.insert(Action::Down); },
             Some(pancurses::Input::Character(' ')) => { self.performed_actions.insert(Action::Select); },
-            Some(pancurses::Input::Character('$')) => { self.performed_actions.insert(Action::Pause); },
-            Some(pancurses::Input::Character('q')) => { self.performed_actions.insert(Action::Pause); },
+
+            Some(pancurses::Input::Character('$')) |
+            Some(pancurses::Input::Character('q')) |
             Some(pancurses::Input::Character('Q')) => { self.performed_actions.insert(Action::Pause); },
+
             Some(_) => { },
             None => ()
         }
